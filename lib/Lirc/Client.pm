@@ -3,7 +3,7 @@ package Lirc::Client;
 ###########################################################################
 # Lirc::Client
 # Mark V. Grimes
-# $Id: Client.pm,v 1.21 2004/12/17 17:41:22 mgrimes Exp $
+# $Id: Client.pm,v 1.23 2004/12/28 21:39:30 mgrimes Exp $
 #
 # Package to interact with the LIRC deamon
 # Copyright (c) 2001 Mark V. Grimes (mgrimes AT alumni DOT duke DOT edu).
@@ -31,7 +31,7 @@ use IO::Socket;
 # TODO: watch for signals from lircd to re-read rc file
 
 use vars qw($VERSION);
-$VERSION = sprintf("%d.%02d", q$Revision: 1.21 $ =~ /(\d+)\.(\d+)/);
+$VERSION = sprintf("%d.%02d", q$Revision: 1.23 $ =~ /(\d+)\.(\d+)/);
 
 our $AUTOLOAD;		# Magic AUTOLOAD functions
 my  $debug = 0;		# Class level debug flag
@@ -88,13 +88,13 @@ sub new {
 	lock_keys( %$self );
 
 	croak "Lirc::Client not passed a program name" unless $self->prog;
-	$self->initialize() or croak "Lircd::Client couldn't initialize device $self->{dev}: $!";
+	$self->_initialize() or croak "Lircd::Client couldn't initialize device $self->{dev}: $!";
 	return $self;
 }
 
 #  -------------------------------------------------------------------------------
 
-sub initialize {
+sub _initialize {
 	my $self = shift;
 
 	if( $self->{fake} ){
@@ -106,7 +106,7 @@ sub initialize {
 			or croak "couldn't connect to $self->{dev}: $!";
 	}
 
-	$self->parse_lircrc;
+	$self->_parse_lircrc;
 	return 1;
 }
 
@@ -119,7 +119,7 @@ sub clean_up {
 
 # -------------------------------------------------------------------------------
 
-sub parse_lircrc {
+sub _parse_lircrc {
   my $self = shift;
 
   local(*RCFILE);
@@ -203,7 +203,7 @@ sub nextcodes {
 }
 
 
-sub get_lines {
+sub _get_lines {
 	my $self = shift;
 
 	# what is in the buffer now?
@@ -228,18 +228,18 @@ sub get_lines {
 sub next_codes {
   my $self = shift;
 
-  while( my @lines = $self->get_lines ){
-	  my @commands;
-	  for my $line (@lines){
-		  chomp $line;
-		  print "Line: $line\n" if $self->debug;
-		  my $command = $self->parse_line( $line );
-		  print "Command: ", (defined $command ? $command : "undef"), "\n" if $self->{debug};
-		  push @commands, $command;
-	  }
-	  return @commands if @commands;
+  my @lines = $self->_get_lines;
+  print "==", join( ", ", map { defined $_ ? $_ : "undef" }  @lines ), "\n";
+  return () unless scalar @lines;
+  my @commands = ();
+  for my $line (@lines){
+	  chomp $line;
+	  print "Line: $line\n" if $self->debug;
+	  my $command = $self->parse_line( $line );
+	  print "Command: ", (defined $command ? $command : "undef"), "\n" if $self->{debug};
+	  push @commands, $command if defined $command;
   }
-  return undef; # no command found and lirc exited?
+  return @commands;
 }
 
 sub nextcode {
@@ -507,6 +507,12 @@ Lirc::Cli
 
 Closes the Lirc device pipe, etc. B<clean_up> will be called when the lirc
 object goes out of scope, so this is not necessary.
+
+=item debug()
+
+  $lirc->debug;
+
+Return the debug status for the lirc object.
 
 =back
 

@@ -1,3 +1,17 @@
+2004-12-29 15:05  mgrimes
+
+	* MANIFEST: Added tests to MANIFEST
+
+2004-12-28 13:39  mgrimes
+
+	* lib/Lirc/Client.pm: Fixed conflict in cvs versions.
+
+2004-12-28 13:34  mgrimes
+
+	* lib/Lirc/Client.pm, t/98-pod.t, t/99-podcoverage.t: Added tests
+	  to check pod validity and coverage.  Added pod documentation for
+	  lirc->debug Renamed other internal functions in lirc to _*
+
 2004-12-17 09:42  mgrimes
 
 	* t/: 05-nextcode.t, 07-select.t, 08-select.t: Removed 08-select.t

@@ -10,4 +10,6 @@ t/03-parse.t
 t/05-nextcode.t
 t/07-select.t
 t/10-lircd.t
+t/98-pod.t
+t/99-podcoverage.t
 META.yml                                 Module meta-data (added by MakeMaker)

@@ -136,6 +136,11 @@ DESCRIPTION
         Closes the Lirc device pipe, etc. clean_up will be called when the lirc
         object goes out of scope, so this is not necessary.
 
+    debug()
+          $lirc->debug;
+
+        Return the debug status for the lirc object.
+
 SEE ALSO
     The Lirc Project - http://www.lirc.org
     Remote Roadie - http://www.peculiarities.com/RemoteRoadie/
