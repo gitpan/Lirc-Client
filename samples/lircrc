@@ -1,0 +1,120 @@
+# =======================================================
+# Sample .lircrc file (taken from rroadie)
+# =======================================================
+
+begin
+  prog = rroadie
+  remote = son-cable
+  button = CABLE_PLAY
+  config = PLAY
+end
+begin
+  prog = rroadie
+  remote = son-cable
+  button = CABLE_PAUSE 
+  config = PAUSE
+end
+begin
+  prog = rroadie
+  remote = son-cable
+  button = CABLE_STOP 
+  config = STOP
+end
+begin
+  prog = rroadie
+  remote = son-cable
+  button = CABLE_FORWARD
+  config = NEXT
+end
+begin
+  prog = rroadie
+  remote = son-cable
+  button = CABLE_REWIND 
+  config = PREV
+end
+begin
+  prog = rroadie 
+  remote = son-cable
+  button = CABLE_ONE 
+  config = 1 
+end
+begin
+  prog = rroadie
+  remote = son-cable
+  button = CABLE_TWO
+  config = 2 
+end
+begin
+  prog = rroadie 
+  remote = son-cable
+  button = CABLE_THREE
+  config = 3 
+end
+begin
+  prog = rroadie 
+  remote = son-cable
+  button = CABLE_FOUR
+  config = 4 
+end
+begin
+  prog = rroadie 
+  remote = son-cable
+  button = CABLE_FIVE
+  config = 5 
+end
+begin
+  prog = rroadie 
+  remote = son-cable
+  button = CABLE_SIX
+  config = 6 
+end
+begin
+  prog = rroadie
+  remote = son-cable
+  button = CABLE_SEVEN
+  config = 7 
+end
+begin
+  prog = rroadie 
+  remote = son-cable
+  button = CABLE_EIGHT
+  config = 8 
+end
+begin
+  prog = rroadie 
+  remote = son-cable
+  button = CABLE_NINE
+  config = 9 
+end
+begin
+  prog = rroadie 
+  remote = son-cable
+  button = CABLE_ZERO
+  config = 0 
+end
+begin
+  prog = rroadie
+  remote = son-cable
+  button = CABLE_RECALL
+  config = SHUFFLE
+end
+begin
+  prog = rroadie
+  remote = son-cable
+  button = CABLE_PIP
+  config = FUNC
+end
+begin
+  prog = rroadie
+  remote = son-cable
+  button = CABLE_VOL_UP
+  config = VOL_UP
+  repeat = 8
+end
+begin
+  prog = rroadie
+  remote = son-cable
+  button = CABLE_VOL_DOWN
+  config = VOL_DOWN
+  repeat = 8
+end

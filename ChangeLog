@@ -1,0 +1,76 @@
+2003-06-27 11:34  mgrimes
+
+	* MANIFEST, Makefile.PL: Fixed the Makefile autogeneration of the
+	  ChangeLog
+
+2003-06-27 10:16  mgrimes
+
+	* lib/Lirc/Client.pm: Added some TODO related items to the pod.
+
+2003-06-27 10:14  mgrimes
+
+	* lib/Lirc/Client.pm: Added the VERSION variable.
+
+2003-06-27 10:09  mgrimes
+
+	* t/lirc-client.t: Added test code to examine the
+	  recongized_commands method.
+
+2003-06-27 10:00  mgrimes
+
+	* Changes, MANIFEST, Makefile.PL, README.head, samples/lircrc:
+	  Initial revision
+
+2003-06-27 10:00  mgrimes
+
+	* Changes, MANIFEST, Makefile.PL, README.head, samples/lircrc:
+	  Moving Lirc::Client out of RRoadie
+
+2003-06-27 09:37  mgrimes
+
+	* lib/Lirc/Client.pm: Cleaned up the formatting and a few comments.
+
+2002-10-09 14:30  mgrimes
+
+	* t/lirc-client.t: Getting ready for the 0.10 release.
+
+2002-07-16 19:33  mgrimes
+
+	* lib/Lirc/Client.pm: Tweaked the mode control.
+
+2002-04-05 13:28  mgrimes
+
+	* lib/Lirc/Client.pm: Additional documentation.
+
+2002-04-05 10:24  mgrimes
+
+	* lib/Lirc/Client.pm: Added documentation.
+
+2002-02-04 09:06  mgrimes
+
+	* lib/Lirc/Client.pm: Minimized the debugging output if the DEBUG
+	  flag is not set.
+
+2002-01-31 04:39  mgrimes
+
+	* t/lirc-client.t: Revised makefile to automatically place the
+	  config files in the user home directory.
+
+2002-01-31 02:02  mgrimes
+
+	* t/lirc-client.t: Creating test script to check lirc::client is
+	  loadalbe, etc.
+
+2002-01-30 08:04  mgrimes
+
+	* lib/Lirc/Client.pm: Made modifications to look for files in their
+	  new locations.
+
+2002-01-24 07:33  mgrimes
+
+	* lib/Lirc/Client.pm: Initial import of mp3tools.
+
+2002-01-24 07:33  mgrimes
+
+	* lib/Lirc/Client.pm: Initial revision
+

@@ -1,0 +1,7 @@
+ChangeLog
+MANIFEST
+README
+Makefile.PL
+lib/Lirc/Client.pm
+t/lirc-client.t
+samples/lircrc

@@ -1,0 +1,83 @@
+This is the README file for the Lirc::Client module writen to provide a
+simple Perl interface with the Lirc.
+
+Installs with the typical
+	perl Makefile.PL
+	make
+	make test
+	make install
+
+Copyright (c) 2001 Mark V. Grimes. All rights reserved. This program
+is free software; you can redistribute it and/or modify it under the
+same terms as Perl itself. 
+
+********************************************************************
+By using this module you agree to take all responsibility for any
+problems which occur including, but not limited to, any unexpected
+data loss.
+********************************************************************
+
+=====================================================================
+
+NAME
+    Lirc::Client - A client library for the Linux Infrared Remote Control
+
+SYNOPSIS
+      use Lirc::Client;
+      ...
+      my $lirc = Lirc::Client->new( 'progname' );
+      do {                            # Loop while getting ir codes
+        my $code = $lirc->nextcode;    # wait for a new ir code
+        print "Lirc> $code\n";        
+        process( $code );              # do whatever you want with the code
+      } while( defined $code );
+
+DESCRIPTION
+    This module provides a simple interface to the Linux Infrared Remote Control
+    (Lirc). The module encasuplates parsing the Lirc config file (.lircrc),
+    openning a connection to the Lirc device, and blocking while waiting for
+    application specific IR commands.
+
+  Use Details
+
+    new( program, [lircrc-file], [lircd-device], [debug-flag] )
+          my $lirc = Lirc::Client->new( 'progname', "$ENV{HOME}/.lircrc", '/etc/lircd', 0 );
+  
+        Defines the program token used in the Lirc config file, opens and parses
+        the Lirc config file (defaults to ~/.lircrc if none specified), connects
+        to the Lirc device (defaults to /etc/lircd if none specified), and
+        returns the Lirc::Client object. Pass a non-false debug-flag to have
+        various debug information printed (defaults to false).
+
+    nextcode()
+          my $code = $lirc->nextcode;
+  
+        Retrieves the next IR command associated with the progname as defined in
+        new(), blocking if none is available.
+
+    recognized_commands()
+          my @list = $lirc->recongnized_commands();
+  
+        Returns a list of all the recongnized commands for this application (as
+        defined in the call to new().
+
+    clean_up()
+          $lirc->clean_up();
+  
+        Closes the Lirc device pipe, etc.
+
+SEE ALSO
+    The Lirc Project - http://www.lirc.org
+    Remote Roadie - http://www.peculiarities.com/RemoteRoadie/
+        My suite of perl scripts which provide both a more powerful interface
+        layer between Lirc/Xmms, and various tools to manage your digital music
+        files and playlists.
+
+AUTHOR
+    Mark V. Grimes (mgrimes <at> alumni <dot> duke <dot> edu)
+
+BUGS
+    None I am aware of. But recongnized_commands() is relatively untested. Need
+    to report repeated keys to the client app. Maybe an event based
+    implementation should be added.
+
