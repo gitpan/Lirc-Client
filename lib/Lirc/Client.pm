@@ -3,7 +3,7 @@ package Lirc::Client;
 ###########################################################################
 # Lirc::Client
 # Mark V. Grimes
-# $Id: Client.pm,v 1.19 2004/12/14 18:31:56 mgrimes Exp $
+# $Id: Client.pm,v 1.21 2004/12/17 17:41:22 mgrimes Exp $
 #
 # Package to interact with the LIRC deamon
 # Copyright (c) 2001 Mark V. Grimes (mgrimes AT alumni DOT duke DOT edu).
@@ -31,7 +31,7 @@ use IO::Socket;
 # TODO: watch for signals from lircd to re-read rc file
 
 use vars qw($VERSION);
-$VERSION = sprintf("%d.%02d", q$Revision: 1.19 $ =~ /(\d+)\.(\d+)/);
+$VERSION = sprintf("%d.%02d", q$Revision: 1.21 $ =~ /(\d+)\.(\d+)/);
 
 our $AUTOLOAD;		# Magic AUTOLOAD functions
 my  $debug = 0;		# Class level debug flag
@@ -67,6 +67,7 @@ sub new {
 		'_mode'			=> '',
 		'_in_block'		=> 0,
 		'_commands'		=> {},
+		'_buf'			=> '',
 		%fields,
 	};
 
@@ -197,14 +198,58 @@ sub recognized_commands {
 
 # -------------------------------------------------------------------------------
 
+sub nextcodes {
+	$_[0]->next_code();
+}
+
+
+sub get_lines {
+	my $self = shift;
+
+	# what is in the buffer now?
+	print "buffer1=", $self->{_buf}, "\n" if $self->debug;
+
+	# read anything in the pipe
+	my $buf;
+	my $status = sysread( $self->sock, $buf, 512 );
+	(carp "bad status from read" and return undef) unless defined $status;
+
+	# what is in the buffer after the read?
+	$self->{_buf} .= $buf;
+	print "buffer2=", $self->{_buf}, "\n" if $self->debug;
+
+	# separate the lines
+	my @lines;
+	push @lines, $1 while( $self->{_buf} =~ s/^(.+)\n// );
+
+	return @lines;
+}
+	
+sub next_codes {
+  my $self = shift;
+
+  while( my @lines = $self->get_lines ){
+	  my @commands;
+	  for my $line (@lines){
+		  chomp $line;
+		  print "Line: $line\n" if $self->debug;
+		  my $command = $self->parse_line( $line );
+		  print "Command: ", (defined $command ? $command : "undef"), "\n" if $self->{debug};
+		  push @commands, $command;
+	  }
+	  return @commands if @commands;
+  }
+  return undef; # no command found and lirc exited?
+}
+
 sub nextcode {
 	$_[0]->next_code();
 }
 
 sub next_code {
   my $self = shift;
-  my $fh = $self->sock;
 
+  my $fh = $self->sock;
   while( defined (my $line = <$fh>) ){
 	  chomp $line;
 	  print "Line: $line\n" if $self->debug;
@@ -384,15 +429,6 @@ a true value for B<debug> to have various debug information printed
 to read STDIN rather than the lircd device (defaults to false), which is 
 primarily useful for debuging.
 
-=item next_code()
-
-=item nextcode()
-
-  my $code = $lirc->next_code;
-
-Retrieves the next IR command associated with the B<progname> as defined in
-B<new()>, blocking if none is available.
-
 =item recognized_commands()
 
   my @list = $lirc->recongnized_commands();
@@ -400,40 +436,31 @@ B<new()>, blocking if none is available.
 Returns a list of all the recongnized commands for this application (as
 defined in the call to B<new>.
 
-=item sock()
+=item next_code()
 
-  my $sock = $lirc->sock();
+=item nextcode()
 
-Returns (or sets if an arguement is passed) the socket from which to read
-lirc commands. This can be used to work Lirc::Client into you own event 
-loop. Here is an example using IO::Select:
+  my $code = $lirc->next_code;
 
-    use IO::Select;
-    ....
-    my $select = IO::Select->new();
-    $select->add( $lirc->sock );
-    while(1){
-        # do some stuff if you want
-        if( my @ready = $select->can_read(0) ){
-            # an ir event has been received
-            # may still have problems is lircd doesn't send a full line
-            # but I have never run into this
-            my $code = $lirc->next_code();
-            process( $code );
-        }
-    }
+Retrieves the next IR command associated with the B<progname> as defined in
+B<new()>, blocking if none is available. B<next_code> uses the stdio read
+commands which are buffered. Use B<next_codes> if you are also using
+select.
 
-This is much more efficient than looping over B<next_code> in non-blocking
-mode. See the B<select.t> test for the complete example.
 
-=item parse_line()
+=item next_codes()
 
-  my $code = $lirc->parse_line( $line );
+=item nextcodes()
 
-Takes a full line as read from the lirc device and returns code on the 
-B<config> line of the lircrc file for that button. This can be used in 
-combination with B<sock> to take more of the event loop control out of
-Lirc::Client. 
+  my @codes = $lirc->next_codes;
+
+Retrieves any IR commands associated with the B<progname> as defined in the 
+B<new()> constructor, blocking if none are available. B<next_codes> uses
+sysread so it is compatible with B<select> driven event loops. This is 
+the most efficient method to accomplish a non-blocking read.
+
+Due to the mechanics of B<sysread> and B<select>, this version may
+return multiple ir codes so the return value is an array.
 
 Here is an example using IO::Select:
 
@@ -442,18 +469,37 @@ Here is an example using IO::Select:
     my $select = IO::Select->new();
     $select->add( $lirc->sock );
     while(1){
-        # do some stuff if you want
-        if( my @ready = $select->can_read(0) ){
-            # an ir event has been received
-            my $ir_line = < $lirc->sock() >;
-            my $code = $lirc->parse_line( $ir_line );
-            process( $code );
+        # do your own stuff, if you want
+        if( my @ready = $select->can_read(0) ){ 
+            # an ir event has been received (if you are tracking other
+			# filehandles, you need to make sure it is lirc)
+            my @codes = $lirc->next_codes;    # should not block
+            for my $code (@codes){
+                process( $code );
+            }
         }
     }
 
-Again, this is much more efficient than looping over B<next_code> in
-non-blocking mode. Also, checkout the B<Event> module on cpan for a
-nice way to handle your event loops.
+This is much more efficient than looping over B<next_code> in non-blocking
+mode. See the B<select.t> test for the complete example. Also, checkout the
+B<Event> module on cpan for a nice way to handle your event loops.
+
+=item sock()
+
+  my $sock = $lirc->sock();
+
+Returns (or sets if an arguement is passed) the socket from which to read
+lirc commands. This can be used to work Lirc::Client into you own event 
+loop. 
+
+=item parse_line()
+
+  my $code = $lirc->parse_line( $line );
+
+Takes a full line as read from the lirc device and returns code on the 
+B<config> line of the lircrc file for that button. This can be used in 
+combination with B<sock> to take more of the event loop control out of
+Lirc::Cli
 
 =item clean_up()
 

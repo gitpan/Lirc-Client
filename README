@@ -66,51 +66,32 @@ DESCRIPTION
         Lirc::Client to read STDIN rather than the lircd device (defaults to
         false), which is primarily useful for debuging.
 
-    next_code()
-    nextcode()
-          my $code = $lirc->next_code;
-
-        Retrieves the next IR command associated with the progname as defined in
-        new(), blocking if none is available.
-
     recognized_commands()
           my @list = $lirc->recongnized_commands();
 
         Returns a list of all the recongnized commands for this application (as
         defined in the call to new.
 
-    sock()
-          my $sock = $lirc->sock();
+    next_code()
+    nextcode()
+          my $code = $lirc->next_code;
 
-        Returns (or sets if an arguement is passed) the socket from which to
-        read lirc commands. This can be used to work Lirc::Client into you own
-        event loop. Here is an example using IO::Select:
+        Retrieves the next IR command associated with the progname as defined in
+        new(), blocking if none is available. next_code uses the stdio read
+        commands which are buffered. Use next_codes if you are also using
+        select.
 
-            use IO::Select;
-            ....
-            my $select = IO::Select->new();
-            $select->add( $lirc->sock );
-            while(1){
-                # do some stuff if you want
-                if( my @ready = $select->can_read(0) ){
-                    # an ir event has been received
-                    # may still have problems is lircd doesn't send a full line
-                    # but I have never run into this
-                    my $code = $lirc->next_code();
-                    process( $code );
-                }
-            }
+    next_codes()
+    nextcodes()
+          my @codes = $lirc->next_codes;
 
-        This is much more efficient than looping over next_code in non-blocking
-        mode. See the select.t test for the complete example.
+        Retrieves any IR commands associated with the progname as defined in the
+        new() constructor, blocking if none are available. next_codes uses
+        sysread so it is compatible with select driven event loops. This is the
+        most efficient method to accomplish a non-blocking read.
 
-    parse_line()
-          my $code = $lirc->parse_line( $line );
-
-        Takes a full line as read from the lirc device and returns code on the
-        config line of the lircrc file for that button. This can be used in
-        combination with sock to take more of the event loop control out of
-        Lirc::Client.
+        Due to the mechanics of sysread and select, this version may return
+        multiple ir codes so the return value is an array.
 
         Here is an example using IO::Select:
 
@@ -119,18 +100,35 @@ DESCRIPTION
             my $select = IO::Select->new();
             $select->add( $lirc->sock );
             while(1){
-                # do some stuff if you want
-                if( my @ready = $select->can_read(0) ){
-                    # an ir event has been received
-                    my $ir_line = < $lirc->sock() >;
-                    my $code = $lirc->parse_line( $ir_line );
-                    process( $code );
+                # do your own stuff, if you want
+                if( my @ready = $select->can_read(0) ){ 
+                    # an ir event has been received (if you are tracking other
+                                # filehandles, you need to make sure it is lirc)
+                    my @codes = $lirc->next_codes;    # should not block
+                    for my $code (@codes){
+                        process( $code );
+                    }
                 }
             }
 
-        Again, this is much more efficient than looping over next_code in
-        non-blocking mode. Also, checkout the Event module on cpan for a nice
-        way to handle your event loops.
+        This is much more efficient than looping over next_code in non-blocking
+        mode. See the select.t test for the complete example. Also, checkout the
+        Event module on cpan for a nice way to handle your event loops.
+
+    sock()
+          my $sock = $lirc->sock();
+
+        Returns (or sets if an arguement is passed) the socket from which to
+        read lirc commands. This can be used to work Lirc::Client into you own
+        event loop.
+
+    parse_line()
+          my $code = $lirc->parse_line( $line );
+
+        Takes a full line as read from the lirc device and returns code on the
+        config line of the lircrc file for that button. This can be used in
+        combination with sock to take more of the event loop control out of
+        Lirc::Cli
 
     clean_up()
           $lirc->clean_up();
