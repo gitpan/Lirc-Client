@@ -1,3 +1,18 @@
+2004-12-14 10:31  mgrimes
+
+	* lib/Lirc/Client.pm: Minor change.
+
+2004-12-14 10:28  mgrimes
+
+	* t/: 07-select.t, 08-select.t: Converted new tests back to unix
+	  file format.
+
+2004-12-14 10:15  mgrimes
+
+	* Changes, MANIFEST, Makefile.PL: Update the MANIFEST and the
+	  repreqs in Makefile.PL Deletect Changes since we are using
+	  ChangeLog.
+
 2004-12-14 10:05  mgrimes
 
 	* t/10-lircd.t: Added a test to connect to a standard /dev/lircd

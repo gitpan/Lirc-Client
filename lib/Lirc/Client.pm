@@ -3,14 +3,14 @@ package Lirc::Client;
 ###########################################################################
 # Lirc::Client
 # Mark V. Grimes
-# $Id: Client.pm,v 1.18 2004/12/14 17:53:14 mgrimes Exp $
+# $Id: Client.pm,v 1.19 2004/12/14 18:31:56 mgrimes Exp $
 #
 # Package to interact with the LIRC deamon
 # Copyright (c) 2001 Mark V. Grimes (mgrimes AT alumni DOT duke DOT edu).
 # All rights reserved. This program is free software; you can redistribute
 # it and/or modify it under the same terms as Perl itself.
 #
-# Formatted with tabstops at 2
+# Formatted with tabstops at 4
 #
 # Parts of this package were inspired by
 #  hotornot.pl by michael@engsoc.org, and
@@ -31,7 +31,7 @@ use IO::Socket;
 # TODO: watch for signals from lircd to re-read rc file
 
 use vars qw($VERSION);
-$VERSION = sprintf("%d.%02d", q$Revision: 1.18 $ =~ /(\d+)\.(\d+)/);
+$VERSION = sprintf("%d.%02d", q$Revision: 1.19 $ =~ /(\d+)\.(\d+)/);
 
 our $AUTOLOAD;		# Magic AUTOLOAD functions
 my  $debug = 0;		# Class level debug flag
