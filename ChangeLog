@@ -1,3 +1,45 @@
+2003-10-06 13:05  mgrimes
+
+	* t/lirc-client.t: Fixed problems in ordering when comparing the
+	  recognized commands.
+
+2003-10-06 13:05  mgrimes
+
+	* samples/lircrc: Revised the lircrc file to facilitate testing.
+
+2003-07-31 14:20  mgrimes
+
+	* lib/Lirc/Client.pm: Fixed error in debug output.
+
+2003-07-24 18:41  mgrimes
+
+	* lib/Lirc/Client.pm: Added a \n after printing the code for
+	  debugging.
+
+2003-07-10 18:31  mgrimes
+
+	* lib/Lirc/Client.pm: Bug fix in the constant definition code.
+
+2003-07-10 09:50  mgrimes
+
+	* lib/Lirc/Client.pm: Added a new debug flag: D_PARSE -- only
+	  display rc parsing if (debug & 8)
+
+2003-07-03 16:33  mgrimes
+
+	* lib/Lirc/Client.pm: Added logic to fake a connection to
+	  /dev/lirc.  If debug & 16 is true, then watches STDIN for lirc
+	  codes.
+
+2003-07-03 15:08  mgrimes
+
+	* lib/Lirc/Client.pm: Cleaned up some formatting.
+
+2003-06-30 17:29  mgrimes
+
+	* lib/Lirc/Client.pm: Added a parse_line method and sock accessor
+	  to facilitate a non-blocking interface.  Need to update the POD.
+
 2003-06-27 11:34  mgrimes
 
 	* MANIFEST, Makefile.PL: Fixed the Makefile autogeneration of the
