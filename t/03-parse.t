@@ -9,7 +9,7 @@ use Test::More tests => 3;
 BEGIN { use_ok( 'Lirc::Client' ); };
 
 # Test 2 -- can we create an new client based on lclient_test?
-my $lirc = Lirc::Client->new( 'lclient_test', 'samples/lircrc' );
+my $lirc = Lirc::Client->new( 'lclient_test', 'samples/lircrc', { fake => 1 } );
 ok $lirc, "Created new Lirc::Client";
 
 # Test 3 -- can we get the command list?

@@ -1,3 +1,24 @@
+2004-12-14 10:05  mgrimes
+
+	* t/10-lircd.t: Added a test to connect to a standard /dev/lircd
+	  daemon.
+
+2004-12-14 09:53  mgrimes
+
+	* lib/Lirc/Client.pm, samples/lircrc.2, t/00-new.t, t/03-parse.t,
+	  t/05-nextcode.t, t/07-select.t, t/08-select.t, t/lirc-client.t:
+	  Significant code review and update.  - Added the ability to call
+	  the constructor with names parameters - Fixed bugs in the
+	  next_code routine - Updated the pod to reflect all the external
+	  functions and   give examples of non-blocking implementations -
+	  Replaced existing tests with five new test files - Generally
+	  cleaned up some ugly code - Use Carp instead of warn and die
+
+2004-05-28 15:46  mgrimes
+
+	* MANIFEST, lib/Lirc/Client.pm: Fixed minor pod error in
+	  Lirc::Client (/etc/lircd -> /dev/lircd)
+
 2003-10-06 13:05  mgrimes
 
 	* t/lirc-client.t: Fixed problems in ordering when comparing the

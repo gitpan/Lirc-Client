@@ -1,7 +1,14 @@
-ChangeLog
 MANIFEST
-README
+ChangeLog
 Makefile.PL
+README
 lib/Lirc/Client.pm
-t/lirc-client.t
 samples/lircrc
+samples/lircrc.2
+t/00-new.t
+t/03-parse.t
+t/05-nextcode.t
+t/07-select.t
+t/08-select.t
+t/10-lircd.t
+META.yml                                 Module meta-data (added by MakeMaker)
