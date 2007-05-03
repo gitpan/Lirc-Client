@@ -1,3 +1,28 @@
+2007-05-02 17:43  mgrimes
+
+	* MANIFEST: Forgot to add Build.PL to MANIFEST
+
+2007-05-02 17:41  mgrimes
+
+	* Build.PL, Makefile.PL, lib/Lirc/Client.pm: Module::Build is
+	  finicky when it comes to AUTHOR names in pod
+
+2007-05-02 17:23  mgrimes
+
+	* Build.PL, MANIFEST, Makefile.PL, README.head, lib/Lirc/Client.pm,
+	  t/96-kwalitee.t, t/97-critic.t, t/98-pod.t, t/99-podcoverage.t,
+	  t/perlcriticrc: Cleaned up the testing code for the 9* tests
+	  (pod,kwalitee,etc) Moved to Module::Build
+
+2007-05-02 13:44  mgrimes
+
+	* lib/Lirc/Client.pm, t/96-kwalitee.t, t/97-critic.t,
+	  t/perlcriticrc: Added more tests.  Minor changes to the pod.
+
+2005-07-16 11:33  mgrimes
+
+	* lib/Lirc/Client.pm: fixed a debug print statement
+
 2004-12-29 15:05  mgrimes
 
 	* MANIFEST: Added tests to MANIFEST

@@ -1,13 +1,22 @@
-# http://module-build.sourceforge.net/META-spec.html
-#XXXXXXX This is a prototype!!!  It will change in the future!!! XXXXX#
-name:         Lirc-Client
-version:      1.23
-version_from: lib/Lirc/Client.pm
-installdirs:  site
+---
+name: Lirc-Client
+version: 1.27
+author:
+  - 'Mark V. Grimes <mgrimes@cpan.org>'
+abstract: A client library for the Linux Infrared Remote Control
+license: perl
+resources:
+  license: http://dev.perl.org/licenses/
 requires:
-    Carp:                          0
-    Hash::Util:                    0
-    IO::Socket:                    1.0
-
-distribution_type: module
-generated_by: ExtUtils::MakeMaker version 6.17
+  Carp: 0
+  Class::Accessor::Fast: 0
+  Hash::Util: 0
+  IO::Socket: 1.0
+provides:
+  Lirc::Client:
+    file: lib/Lirc/Client.pm
+    version: 1.27
+generated_by: Module::Build version 0.2806
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.2.html
+  version: 1.2

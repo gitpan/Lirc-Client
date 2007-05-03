@@ -3,7 +3,7 @@ package Lirc::Client;
 ###########################################################################
 # Lirc::Client
 # Mark V. Grimes
-# $Id: Client.pm,v 1.23 2004/12/28 21:39:30 mgrimes Exp $
+# $Id: Client.pm,v 1.27 2007/05/03 00:41:19 mgrimes Exp $
 #
 # Package to interact with the LIRC deamon
 # Copyright (c) 2001 Mark V. Grimes (mgrimes AT alumni DOT duke DOT edu).
@@ -21,20 +21,18 @@ package Lirc::Client;
 
 use strict;
 use warnings;
-use Carp;
+use base qw(Class::Accessor::Fast);
 use Hash::Util qw(lock_keys);	# Lock a hash so no new keys can be added
-
+use Carp;
 use IO::Socket;
+
 # use POSIX qw(:errno_h);
 # use Fcntl qw(F_GETFL F_SETFL O_NONBLOCK);
 
 # TODO: watch for signals from lircd to re-read rc file
 
-use vars qw($VERSION);
-$VERSION = sprintf("%d.%02d", q$Revision: 1.23 $ =~ /(\d+)\.(\d+)/);
-
-our $AUTOLOAD;		# Magic AUTOLOAD functions
-my  $debug = 0;		# Class level debug flag
+our $VERSION = sprintf("%d.%02d", q$Revision: 1.27 $ =~ /(\d+)\.(\d+)/x);
+our $DEBUG = 0;		# Class level debug flag
 
 # #########################################################
 #
@@ -52,17 +50,16 @@ my %fields = (		# List of all the fields which will have accessors
 	'sock'		=> undef,		# the lircd socket
 );
 
+Lirc::Client->mk_accessors( keys %fields );
 
 # -------------------------------------------------------------------------------
-# LircClient->new( <program>, [<lircrc-file>], [<lircd-device>], [<debug-flag>], [<fake-lircd>] );
-#
-#
+# LircClient->new( <program>, [<lircrc-file>], [<lircd-device>],
+#                               [<debug-flag>], [<fake-lircd>] );
 #
 sub new {
 	my $that  = shift;
 	my $class = ref($that) || $that;	# Enables use to call $instance->new()
 	my $self  = {
-		'_permitted'	=> \%fields,
 		'_DEBUG' 		=> 0,			# Instance level debug flag
 		'_mode'			=> '',
 		'_in_block'		=> 0,
@@ -75,7 +72,7 @@ sub new {
 	my $cfg = {}; 
 	for(qw/prog rcfile dev debug fake/){	# get any passed by order
 		my $arg = shift;
-		($cfg=$arg and last) if UNIVERSAL::isa($arg,'HASH');
+		($cfg=$arg and last) if ref $arg eq 'HASH';
 		$self->{$_} = $arg if defined $arg;
 	}
 	while(my ($k,$v) = each %$cfg ){		# now take care of those by name
@@ -88,7 +85,8 @@ sub new {
 	lock_keys( %$self );
 
 	croak "Lirc::Client not passed a program name" unless $self->prog;
-	$self->_initialize() or croak "Lircd::Client couldn't initialize device $self->{dev}: $!";
+    $self->_initialize()
+        or croak "Lircd::Client couldn't initialize device $self->{dev}: $!";
 	return $self;
 }
 
@@ -114,23 +112,28 @@ sub _initialize {
 
 sub clean_up {
 	my $self = shift;
-	close $self->{sock} unless $self->{fake}
+	close $self->{sock} unless $self->{fake};
+    return;
 }
 
 # -------------------------------------------------------------------------------
 
-sub _parse_lircrc {
+sub _parse_lircrc { ## no critic  
   my $self = shift;
 
-  local(*RCFILE);
-  open( RC_FILE, "<".$self->{rcfile} ) or croak "couldn't open lircrc file ($self->{rcfile}): $!";
+  # This is too complicated and uses if/elsif/elsif/...
+  # TODO: fix it when we can use "given"
+  ## no critic
+
+  open( my $rcfile, '<', $self->{rcfile} )
+      or croak "couldn't open lircrc file ($self->{rcfile}): $!";
 
   my $in_block = 0;
   my $cur_mode = '';
   my %commands;
 
   my ($prog, $remote, $button, $repeat, $config, $mode, $flags);
-  while(<RC_FILE>){
+  while(<$rcfile>){
     s/^\s*#.*$//g;                            # remove commented lines
 
     # print "> ($cur_mode) $_" if ($self->{debug} & D_PARSE);
@@ -173,8 +176,10 @@ sub _parse_lircrc {
       croak "Couldn't parse lircrc file ($self->{rcfile}) error in line: $_\n";
     }
   }
-  close RC_FILE;
+  close $rcfile;
   $self->{_commands} = \%commands;
+
+  return;
 }
 
 # -------------------------------------------------------------------------------
@@ -199,7 +204,7 @@ sub recognized_commands {
 # -------------------------------------------------------------------------------
 
 sub nextcodes {
-	$_[0]->next_code();
+	return $_[0]->next_code();
 }
 
 
@@ -212,15 +217,16 @@ sub _get_lines {
 	# read anything in the pipe
 	my $buf;
 	my $status = sysread( $self->sock, $buf, 512 );
-	(carp "bad status from read" and return undef) unless defined $status;
+	( carp "bad status from read" and return ) unless defined $status;
 
 	# what is in the buffer after the read?
 	$self->{_buf} .= $buf;
 	print "buffer2=", $self->{_buf}, "\n" if $self->debug;
 
-	# separate the lines
-	my @lines;
-	push @lines, $1 while( $self->{_buf} =~ s/^(.+)\n// );
+	# separate the lines, leaving partial lines on _buf
+    my @lines;
+	push @lines, $1 while( $self->{_buf} =~ s/^(.+)\n// );  ## no critic
+                # while() tests that s/// matched
 
 	return @lines;
 }
@@ -229,21 +235,21 @@ sub next_codes {
   my $self = shift;
 
   my @lines = $self->_get_lines;
-  print "==", join( ", ", map { defined $_ ? $_ : "undef" }  @lines ), "\n";
+  print "==", join( ", ", map { defined $_ ? $_ : "undef" }  @lines ), "\n" if $self->debug;
   return () unless scalar @lines;
   my @commands = ();
   for my $line (@lines){
 	  chomp $line;
 	  print "Line: $line\n" if $self->debug;
 	  my $command = $self->parse_line( $line );
-	  print "Command: ", (defined $command ? $command : "undef"), "\n" if $self->{debug};
+	  print "Command: ", (defined $command ? $command : "undef"), "\n" if $self->debug;
 	  push @commands, $command if defined $command;
   }
   return @commands;
 }
 
 sub nextcode {
-	$_[0]->next_code();
+	return $_[0]->next_code();
 }
 
 sub next_code {
@@ -254,10 +260,10 @@ sub next_code {
 	  chomp $line;
 	  print "Line: $line\n" if $self->debug;
 	  my $command = $self->parse_line( $line );
-	  print "Command: ", (defined $command ? $command : "undef"), "\n" if $self->{debug};
+	  print "Command: ", (defined $command ? $command : "undef"), "\n" if $self->debug;
 	  return $command if defined $command;
   }
-  return undef; # no command found and lirc exited?
+  return; # no command found and lirc exited?
 }
 
 # -------------------------------------------------------------------------------
@@ -272,14 +278,14 @@ sub parse_line {			# parse a line read from lircd
 	if( /^\s*BEGIN\s*$/ ){
 		croak "got BEGIN inside a block from lircd: $_" if $self->{_in_block};
 		$self->{_in_block} = 1;
-		return undef;
+		return;
 	}
 	if( /^\s*END\s*$/ ){
 		croak "got END outside a block from lircd: $_" if! $self->{_in_block};
 		$self->{_in_block} = 0;
-		return undef;
+		return;
 	}
-	return undef if $self->{_in_block};
+	return if $self->{_in_block};
 
 	# Decipher IR Command
 	# http://www.lirc.org/html/technical.html#applications
@@ -287,21 +293,21 @@ sub parse_line {			# parse a line read from lircd
 	my ($hex, $repeat, $button, $remote) = split /\s+/;
 	defined $button and length $button or do {
 		carp "Unable to decode.\n";
-		return  undef;
+		return;
 	};
 
 	my %commands = %{$self->{_commands}};
 	my $cur_mode = $self->{_mode};
-	exists $commands{"$remote-$button-$cur_mode"} or return undef;
+	exists $commands{"$remote-$button-$cur_mode"} or return;
 	my %command = %{$commands{"$remote-$button-$cur_mode"}};
 
 	my $rep_count = 2**32;  # default repeat count
 	if( defined $command{rep} && $command{rep} ){ $rep_count = $command{rep}; }
 
-	if( hex($repeat) % $rep_count != 0 ){ return undef; }
+	if( hex($repeat) % $rep_count != 0 ){ return; }
 	if( defined $command{mode} ){ $self->{mode} = $command{mode}; }
 
-	print ">> $button accepted --> $command{conf}\n" if $self->{debug};
+	print ">> $button accepted --> $command{conf}\n" if $self->debug;
 	return $command{conf};
 }
 
@@ -309,38 +315,8 @@ sub DESTROY {
 	my $self = shift;
 	print __PACKAGE__, ": DESTROY\n" if $self->debug;
 
-	$self->clean_up();
-}
-
-# #########################################################
-#
-# Proxy accessor and methods
-#
-# #########################################################
-
-sub AUTOLOAD {
-	my $self = shift;
-	my $type = ref($self) or croak "$self is not an object";
-
-	my $name = $AUTOLOAD;
-	$name =~ s/.*://;			# Strip fully qualified portion
-
-	# ensure none of these are DESTROY
-	return if $name =~ /^DESTROY$/;	# TODO: correct?
-
-	# Ensure that this is an accessor to a permitted field
-	unless (exists $self->{'_permitted'}->{$name} ){
-		croak "Can't access `$name` field in class $type";
-	}
-
-	# print "AUTOLOAD ($name)\n" if $self->debug;
-
-	# Return the value of the field, setting if an argument supplied
-	if(@_){
-		return $self->{$name} = shift;
-	} else {
-		return $self->{$name};
-	}
+	$self->clean_up;
+    return;
 }
 
 # #########################################################
@@ -360,14 +336,16 @@ sub debug {
 		if( ref($self) ){
 			$self->{debug} = $level;
 		} else {
-			$debug = $level;
+			$DEBUG = $level;
 		}
-		# Call the parent class debug method, TODO: check that it is an inherited class
+		# Call the parent class debug method
+        # TODO: check that it is an inherited class
 		# $self->SUPER::debug($debug);
-	} else {			# Return the debug level
-		return $debug || $self->{debug};
-	}
+	} 
+
+	return $DEBUG || $self->{debug};
 }
+
 1;
 
 
@@ -522,20 +500,20 @@ Return the debug status for the lirc object.
 
 =item The Lirc Project - http://www.lirc.org
 
-=item Remote Roadie - http://www.peculiarities.com/RemoteRoadie/
-
-My suite of perl scripts which provide both a more powerful interface layer
-between Lirc/Xmms, and various tools to manage your digital music files and
-playlists.
-
 =back
 
 =head1 AUTHOR
 
-Mark V. Grimes (mgrimes <at> alumni <dot> duke <dot> edu)
+Mark V. Grimes <mgrimes@cpan.org>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (C) 2006 by Mark V. Grimes
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself, either Perl version 5.8.2 or,
+at your option, any later version of Perl 5 you may have available.
 
 =head1 BUGS
 
-None that I am aware of at this point. Please let me know if you find any.
-Two new features need: report repeated keys to the client app and provide 
-a non-blocking nextcode.
+None of which I am aware. Please let me know if you find any.
