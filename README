@@ -126,10 +126,10 @@ SEE ALSO
     The Lirc Project - http://www.lirc.org
 
 AUTHOR
-    Mark V. Grimes <mgrimes@cpan.org>
+    Mark Grimes <mgrimes@cpan.org>
 
 COPYRIGHT AND LICENSE
-    Copyright (C) 2006 by Mark V. Grimes
+    Copyright (C) 2006 by Mark Grimes
 
     This library is free software; you can redistribute it and/or modify it
     under the same terms as Perl itself, either Perl version 5.8.2 or, at

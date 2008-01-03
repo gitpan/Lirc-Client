@@ -2,11 +2,11 @@ package Lirc::Client;
 
 ###########################################################################
 # Lirc::Client
-# Mark V. Grimes
-# $Id: Client.pm,v 1.27 2007/05/03 00:41:19 mgrimes Exp $
+# Mark Grimes
+# $Id: Client.pm,v 1.28 2007/12/10 22:45:58 mgrimes Exp $
 #
 # Package to interact with the LIRC deamon
-# Copyright (c) 2001 Mark V. Grimes (mgrimes AT alumni DOT duke DOT edu).
+# Copyright (c) 2001 Mark Grimes (mgrimes AT alumni DOT duke DOT edu).
 # All rights reserved. This program is free software; you can redistribute
 # it and/or modify it under the same terms as Perl itself.
 #
@@ -31,7 +31,7 @@ use IO::Socket;
 
 # TODO: watch for signals from lircd to re-read rc file
 
-our $VERSION = sprintf("%d.%02d", q$Revision: 1.27 $ =~ /(\d+)\.(\d+)/x);
+our $VERSION = '1.29';
 our $DEBUG = 0;		# Class level debug flag
 
 # #########################################################
@@ -203,10 +203,6 @@ sub recognized_commands {
 
 # -------------------------------------------------------------------------------
 
-sub nextcodes {
-	return $_[0]->next_code();
-}
-
 
 sub _get_lines {
 	my $self = shift;
@@ -231,6 +227,10 @@ sub _get_lines {
 	return @lines;
 }
 	
+sub nextcodes {
+	return $_[0]->next_codes();
+}
+
 sub next_codes {
   my $self = shift;
 
@@ -504,11 +504,11 @@ Return the debug status for the lirc object.
 
 =head1 AUTHOR
 
-Mark V. Grimes <mgrimes@cpan.org>
+Mark Grimes E<lt>mgrimes@cpan.orgE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2006 by Mark V. Grimes
+Copyright (C) 2006 by Mark Grimes
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself, either Perl version 5.8.2 or,
