@@ -1,3 +1,22 @@
+2008-02-01 03:24  mgrimes
+
+	* ., Build.PL, README, lib/Lirc/Client.pm, samples/lircrc,
+	  samples/lircrc.2, samples/lircrc.3, samples/lircrc.4,
+	  samples/lircrc.inc, t/03-parse.t, t/05-nextcode.t,
+	  t/06-startup_mode.t, t/07-select.t: Added support for mode's.
+	  Recognize the startup_mode flag.
+	  Start in a mode that is identical to the program name (if one
+	  exists).
+	  Implemented the include directive.
+	  Support wild card (*) entries for remote or button.
+	  Support blocks that lack a remote.
+	  General code cleanup.
+	  Pod cleanup.
+
+2008-01-03 02:40  mgrimes
+
+	* ., README: Update svn:ignore
+
 2008-01-03 02:29  mgrimes
 
 	* .: Updates to svn:ignore
