@@ -1,28 +1,30 @@
 ---
-name: Lirc-Client
-version: 1.51
+abstract: 'A client library for the Linux Infrared Remote Control'
 author:
   - 'Mark Grimes E<lt>mgrimes@cpan.orgE<gt>'
-abstract: A client library for the Linux Infrared Remote Control
+build_requires:
+  File::Spec: 0
+  IO::Handle: 0
+  IO::Select: 0
+  Test::More: 0
+configure_requires:
+  Module::Build: 0.36
+generated_by: 'Module::Build version 0.3607'
 license: perl
-resources:
-  license: http://dev.perl.org/licenses/
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
+name: Lirc-Client
+provides:
+  Lirc::Client:
+    file: lib/Lirc/Client.pm
+    version: 1.54
 requires:
   Carp: 0
   Class::Accessor::Fast: 0
   File::Path::Expand: 0
   Hash::Util: 0
   IO::Socket: 1.0
-build_requires:
-  File::Spec: 0
-  IO::Handle: 0
-  IO::Select: 0
-  Test::More: 0
-provides:
-  Lirc::Client:
-    file: lib/Lirc/Client.pm
-    version: 1.51
-generated_by: Module::Build version 0.2808
-meta-spec:
-  url: http://module-build.sourceforge.net/META-spec-v1.2.html
-  version: 1.2
+resources:
+  license: http://dev.perl.org/licenses/
+version: 1.54
