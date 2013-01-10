@@ -1,8 +1,7 @@
 Build.PL
 Changes
 lib/Lirc/Client.pm
-MANIFEST
-META.yml
+MANIFEST			This list of files
 README
 samples/lircrc
 samples/lircrc.2
@@ -28,3 +27,5 @@ xt/minimumversion.t
 xt/perlcriticrc
 xt/pod-coverage.t
 xt/pod.t
+META.yml
+META.json

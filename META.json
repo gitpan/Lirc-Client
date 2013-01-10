@@ -1,0 +1,53 @@
+{
+   "abstract" : "A client library for the Linux Infrared Remote Control",
+   "author" : [
+      "Mark Grimes E<lt>mgrimes@cpan.orgE<gt>"
+   ],
+   "dynamic_config" : 1,
+   "generated_by" : "Module::Build version 0.4, CPAN::Meta::Converter version 2.120921",
+   "license" : [
+      "perl_5"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : "2"
+   },
+   "name" : "Lirc-Client",
+   "prereqs" : {
+      "build" : {
+         "requires" : {
+            "File::Spec" : "0",
+            "IO::Handle" : "0",
+            "IO::Select" : "0",
+            "Test::More" : "0"
+         }
+      },
+      "configure" : {
+         "requires" : {
+            "Module::Build" : "0.4"
+         }
+      },
+      "runtime" : {
+         "requires" : {
+            "Carp" : "0",
+            "Class::Accessor::Fast" : "0",
+            "File::Path::Expand" : "0",
+            "Hash::Util" : "0",
+            "IO::Socket" : "1.0"
+         }
+      }
+   },
+   "provides" : {
+      "Lirc::Client" : {
+         "file" : "lib/Lirc/Client.pm",
+         "version" : "1.55"
+      }
+   },
+   "release_status" : "stable",
+   "resources" : {
+      "license" : [
+         "http://dev.perl.org/licenses/"
+      ]
+   },
+   "version" : "1.55"
+}
