@@ -3,15 +3,15 @@ use warnings;
 use Module::Build;
 
 my $build = Module::Build->new(
-    module_name => 'Lirc::Client',
-    license     => 'perl',
+    module_name   => 'Lirc::Client',
+    license       => 'perl',
+    create_readme => 1,
 
-    requires           => {
-        'IO::Socket'            => '1.0',
-        'Hash::Util'            => 0,
-        'Class::Accessor::Fast' => 0,
-        'Carp'                  => 0,
-        'File::Path::Expand'    => 0,
+    requires => {
+        'Moo'                => '1.0',
+        'IO::Socket'         => '1.0',
+        'Carp'               => 0,
+        'File::Path::Expand' => 0,
     },
     build_requires => {
         'Test::More' => 0,
@@ -20,14 +20,16 @@ my $build = Module::Build->new(
         'IO::Handle' => 0,
     },
 
-    # recommends				=> {
-    # 		'Test::Pod'				=> 0,
-    # 	},
+    meta_merge => {
+        resources => {
+            bugtracker =>
+              'http://rt.cpan.org/NoAuth/Bugs.html?Dist=Lirc-Client',
+            repository => 'http://github.com/mvgrimes/Lirc-Client'
+        }
+    },
 );
 
 # LIRC doesn't work on Windows, so no need for this module to support it
 die "No support for OS" if $^O eq 'MSWin32';
 
-# $build->add_build_element('gif');
 $build->create_build_script;
-

@@ -30,24 +30,29 @@
       "runtime" : {
          "requires" : {
             "Carp" : "0",
-            "Class::Accessor::Fast" : "0",
             "File::Path::Expand" : "0",
-            "Hash::Util" : "0",
-            "IO::Socket" : "1.0"
+            "IO::Socket" : "1.0",
+            "Moo" : "1.0"
          }
       }
    },
    "provides" : {
       "Lirc::Client" : {
          "file" : "lib/Lirc/Client.pm",
-         "version" : "1.55"
+         "version" : "2.00"
       }
    },
    "release_status" : "stable",
    "resources" : {
+      "bugtracker" : {
+         "web" : "http://rt.cpan.org/NoAuth/Bugs.html?Dist=Lirc-Client"
+      },
       "license" : [
          "http://dev.perl.org/licenses/"
-      ]
+      ],
+      "repository" : {
+         "url" : "http://github.com/mvgrimes/Lirc-Client"
+      }
    },
-   "version" : "1.55"
+   "version" : "2.00"
 }
