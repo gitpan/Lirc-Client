@@ -1,5 +1,13 @@
 # Lirc::Client - Significant changes since the last public release
 
+2.02 - Fri Aug 15 20:35:13 EDT 2014
+    Improves the Synopsis code a bit
+
+2.01 - Sat Aug  9 09:06:53 EDT 2014
+    Adds minimum perl version to the prereqs
+    Converts the README file from the Lirc::Client docs
+    General cleanup
+
 2.00 - Sun Feb 10 19:44:37 EST 2013
     Converts to Moo for object system
     - Maintains speed, but makes code much more clean.

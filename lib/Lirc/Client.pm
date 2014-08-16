@@ -9,7 +9,7 @@ use Carp;
 use IO::Socket;
 use File::Path::Expand;
 
-our $VERSION = '2.00';
+our $VERSION = '2.02';
 
 has prog => ( is => 'ro', required => 1 );   # the program name from lircrc file
 has rcfile => ( is => 'ro', default => sub { "$ENV{HOME}/.lircrc" } );
@@ -323,19 +323,17 @@ Lirc::Client - A client library for the Linux Infrared Remote Control
 
 =head1 VERSION
 
-version 2.00
+version 2.02
 
 =head1 SYNOPSIS
 
   use Lirc::Client;
-  ...
+
   my $lirc = Lirc::Client->new({ prog => 'progname' });
-  my $code;
-  do {                         # Loop while getting ir codes
-    $code = $lirc->next_code;  # wait for a new ir code
+  while( my $code = $lirc->next_code ){  # wait for a new ir code
     print "Lirc> $code\n";
     process( $code );          # do whatever you want with the code
-  } while( defined $code );    # undef will be returned when lirc dev exits
+  }
 
 =head1 DESCRIPTION
 
@@ -530,7 +528,7 @@ If anyone has need of one or more of these features, please let me know
 
 =over 4
 
-=item The Lirc Project - http://www.lirc.org
+=item L<The Lirc Project|http://www.lirc.org>
 
 =back
 
@@ -554,7 +552,7 @@ Mark Grimes E<lt>mgrimes@cpan.orgE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2013 by Mark Grimes E<lt>mgrimes@cpan.orgE<gt>.
+This software is copyright (c) 2014 by Mark Grimes E<lt>mgrimes@cpan.orgE<gt>.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

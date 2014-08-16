@@ -4,7 +4,7 @@
       "Mark Grimes E<lt>mgrimes@cpan.orgE<gt>"
    ],
    "dynamic_config" : 1,
-   "generated_by" : "Module::Build version 0.4, CPAN::Meta::Converter version 2.120921",
+   "generated_by" : "Module::Build version 0.4205",
    "license" : [
       "perl_5"
    ],
@@ -24,7 +24,7 @@
       },
       "configure" : {
          "requires" : {
-            "Module::Build" : "0.4"
+            "Module::Build" : "0.36"
          }
       },
       "runtime" : {
@@ -32,14 +32,15 @@
             "Carp" : "0",
             "File::Path::Expand" : "0",
             "IO::Socket" : "1.0",
-            "Moo" : "1.0"
+            "Moo" : "1.0",
+            "perl" : "5.006"
          }
       }
    },
    "provides" : {
       "Lirc::Client" : {
          "file" : "lib/Lirc/Client.pm",
-         "version" : "2.00"
+         "version" : "2.02"
       }
    },
    "release_status" : "stable",
@@ -54,5 +55,5 @@
          "url" : "http://github.com/mvgrimes/Lirc-Client"
       }
    },
-   "version" : "2.00"
+   "version" : "2.02"
 }

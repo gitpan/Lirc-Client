@@ -2,18 +2,16 @@ NAME
     Lirc::Client - A client library for the Linux Infrared Remote Control
 
 VERSION
-    version 2.00
+    version 2.02
 
 SYNOPSIS
       use Lirc::Client;
-      ...
+
       my $lirc = Lirc::Client->new({ prog => 'progname' });
-      my $code;
-      do {                         # Loop while getting ir codes
-        $code = $lirc->next_code;  # wait for a new ir code
+      while( my $code = $lirc->next_code ){  # wait for a new ir code
         print "Lirc> $code\n";
         process( $code );          # do whatever you want with the code
-      } while( defined $code );    # undef will be returned when lirc dev exits
+      }
 
 DESCRIPTION
     This module provides a simple interface to the Linux Infrared Remote
@@ -177,7 +175,7 @@ TODO
     (via http://rt.cpan.org if possible).
 
 SEE ALSO
-    The Lirc Project - http://www.lirc.org
+    The Lirc Project <http://www.lirc.org>
 
 THANKS
     Parts of this package were inspired by a project by michael@engsoc.org
@@ -195,7 +193,7 @@ AUTHOR
     Mark Grimes <mgrimes@cpan.org>
 
 COPYRIGHT AND LICENSE
-    This software is copyright (c) 2013 by Mark Grimes <mgrimes@cpan.org>.
+    This software is copyright (c) 2014 by Mark Grimes <mgrimes@cpan.org>.
 
     This is free software; you can redistribute it and/or modify it under
     the same terms as the Perl 5 programming language system itself.

@@ -8,6 +8,7 @@ my $build = Module::Build->new(
     create_readme => 1,
 
     requires => {
+        'perl'               => '5.006',
         'Moo'                => '1.0',
         'IO::Socket'         => '1.0',
         'Carp'               => 0,
@@ -19,6 +20,7 @@ my $build = Module::Build->new(
         'IO::Select' => 0,
         'IO::Handle' => 0,
     },
+    configure_requires => { 'Module::Build' => '0.36', },
 
     meta_merge => {
         resources => {
